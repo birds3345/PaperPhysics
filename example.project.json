@@ -1,0 +1,33 @@
+{
+	"name": "PaperPhysicsExample",
+	"tree": {
+        "$className": "DataModel",
+        
+        "ReplicatedStorage": {
+            "$className": "ReplicatedStorage",
+
+            "PaperPhysics": {
+                "$path": "./src/"
+            }
+        },
+
+        "StarterGui": {
+            "$className": "StarterGui",
+
+            "Main": {
+                "$className": "ScreenGui",
+
+                "Canvas": {
+                    "$className": "Frame",
+
+                    "$properties": {
+                        "Size": {"UDim2": [[1, 0], [1, 0]]},
+                        "BackgroundColor3": {"Color3": [0, 0, 0]}
+                    }
+                },
+
+                "$path": "./example/"
+            }
+        }
+	}
+}

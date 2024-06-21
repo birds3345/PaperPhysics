@@ -1,0 +1,6 @@
+{
+	"name": "PaperPhysics",
+	"tree": {
+		"$path": "./src/"
+	}
+}
