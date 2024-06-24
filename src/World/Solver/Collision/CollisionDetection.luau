@@ -34,43 +34,38 @@ local function projectPolygon(polygon: {Vector3}, axis: Vector3): (number, numbe
 	return shapeMin, shapeMax
 end
 
-local function projectCircle(position: Vector3, radius: number, axis: Vector3): (number, number)
-    local p = position:Dot(axis)
-
-    return p - radius, p + radius
-end
-
-local function polygonCircle(b1: Body.Body, b2: Body.Body, polygonPosition: Vector3, polygon: {Vector3}, circlePosition: Vector3, radius: number): CollisionManifold.CollisionManifold?
-    local normal: Vector3 = Vector3.zero
-	local depth = math.huge
+local function closestPointOnPolygon(point: Vector3, polygon: {Vector3}): Vector3
+    local closestPoint: Vector3 = Vector3.zero
+    local minDistance = math.huge
 
     for i = 1, #polygon do
         local v1 = polygon[i]
         local v2 = polygon[i % #polygon + 1]
 
         local edge = (v2 - v1).Unit
-        local n = Vector3.new(edge.Y, -edge.X)
-        
-        local polyMin, polyMax = projectPolygon(polygon, n)
-		local circleMin, circleMax = projectCircle(circlePosition, radius, n)
-		
-		if polyMax <= circleMin or circleMax <= polyMin then
-			return
-		end
-		
-		local overlap = math.min(polyMax - circleMin, circleMax - polyMin)
-		if overlap < depth then
-			depth = overlap
-			normal = n
-		end
+        local edgeLength = (v2 - v1).Magnitude
+
+        local pointOnSeg = closestPointOnLineSegment(point, v1, edge, edgeLength)
+
+        if pointOnSeg then
+            local distance = (point - pointOnSeg).Magnitude
+            if distance < minDistance then
+                minDistance = distance
+
+                closestPoint = pointOnSeg
+            end
+        end
+
+        --the closest point can also be a vertex
+        local distance = (point - v1).Magnitude
+        if distance < minDistance then
+            minDistance = distance
+
+            closestPoint = v1
+        end
     end
 
-    local dir = (circlePosition - polygonPosition).Unit
-	if dir:Dot(normal) < 0 then
-		normal *= -1
-	end
-    
-    return CollisionManifold.new(b1, b2, normal, depth, {circlePosition - normal * radius})
+    return closestPoint
 end
 
 local function polygonPolygon(b1: Body.Body, b2: Body.Body, p1Pos: Vector3, p1: {Vector3}, p2Pos: Vector3, p2: {Vector3}): CollisionManifold.CollisionManifold?
@@ -120,8 +115,7 @@ local function polygonPolygon(b1: Body.Body, b2: Body.Body, p1Pos: Vector3, p1: 
 		end
     end
 
-    local dir = (p2Pos - p1Pos).Unit
-	if dir:Dot(normal) < 0 then
+	if (p2Pos - p1Pos).Unit:Dot(normal) < 0 then
 		normal *= -1
 	end
     
@@ -223,7 +217,21 @@ end
 function CollisionDetection.rectangleCircle(rectangle: Rectangle.Rectangle, circle: Circle.Circle): CollisionManifold.CollisionManifold?
     local c1, c2, c3, c4 = ShapeUtility.calculateRectangleVertices(rectangle)
     
-    return polygonCircle(rectangle, circle, rectangle.position, {c1, c2, c3, c4}, circle.position, circle.radius)
+    local closest = closestPointOnPolygon(circle.position, {c1, c2, c3, c4})
+    local relative = circle.position - closest
+    if relative.Magnitude > circle.radius then return end
+    
+    local normal = if relative == Vector3.zero then Vector3.yAxis else relative.Unit
+    local depth = circle.radius - relative.Magnitude
+    
+    --luau thinks (circle.position - rectangle.position) is a number
+    if ((circle.position - rectangle.position) :: any).Unit:Dot(normal) < 0 then
+		normal *= -1
+	end
+
+    local contactPoint = circle.position - normal * circle.radius
+    
+    return CollisionManifold.new(rectangle, circle, normal, depth, {contactPoint})
 end
 
 function CollisionDetection.rectangleRectangle(rectangle1: Rectangle.Rectangle, rectangle2: Rectangle.Rectangle): CollisionManifold.CollisionManifold?
