@@ -3,8 +3,6 @@
 --which means the performance impact is negligible at best
 --so this is (hopefully) okay performance wise
 
---!native
-
 local BodyRTTI = require(script.Parent.BodyRTTI)
 
 local Body = {}
