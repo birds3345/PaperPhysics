@@ -86,8 +86,8 @@ function QuadTree:_subdivide()
     local mid = (topLeft + bottomRight) / 2
 
     self._topLeft = QuadTree.new(self._maxPoints, Box.new(topLeft, mid))
-    self._topRight = QuadTree.new(self._maxPoints, Box.new(Vector2.new(mid.X, topLeft.Y), Vector2.new(bottomRight.X, mid.Y)))
-    self._bottomLeft = QuadTree.new(self._maxPoints, Box.new(Vector2.new(topLeft.X, mid.Y), Vector2.new(mid.X, bottomRight.Y)))
+    self._topRight = QuadTree.new(self._maxPoints, Box.new(Vector3.new(mid.X, topLeft.Y), Vector3.new(bottomRight.X, mid.Y)))
+    self._bottomLeft = QuadTree.new(self._maxPoints, Box.new(Vector3.new(topLeft.X, mid.Y), Vector3.new(mid.X, bottomRight.Y)))
     self._bottomRight = QuadTree.new(self._maxPoints, Box.new(mid, bottomRight))
 end
 
@@ -127,7 +127,7 @@ export type QuadTree<T> = typeof(setmetatable({} :: {
     _subdivided: boolean;
 
     _boundary: PubTypes.Box;
-    _subdivisionSize: Vector2;
+    _subdivisionSize: Vector3;
 
     _maxPoints: number;
     _points: {Point<T>};

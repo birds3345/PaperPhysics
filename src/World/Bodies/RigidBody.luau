@@ -27,11 +27,11 @@ function RigidBody.new(): RigidBody
     self._inertia = 0
     self._inverseInertia = 0
 
-    self._centroid = Vector2.zero
+    self._centroid = Vector3.zero
     self._area = 0
 
-    self._boundingBox = Box.point(Vector2.zero)
-    self.size = Vector2.zero
+    self._boundingBox = Box.point(Vector3.zero)
+    self.size = Vector3.zero
 
     return self
 end
@@ -46,11 +46,11 @@ export type RigidBody = typeof(setmetatable({} :: {
     _inertia: number;
     _inverseInertia: number;
 
-    _centroid: Vector2;
+    _centroid: Vector3;
     _area: number;
 
     _boundingBox: PubTypes.Box;
-    size: Vector2;
+    size: Vector3;
 
     setRotation: (self: RigidBody, radians: number) -> ();
 }, RigidBody)) & Body.Body

@@ -9,6 +9,6 @@ function Triangulator.triangulate(polygon: PubTypes.Polygon): TriangleList
     return {}
 end
 
-export type TriangleList = {Vector2}
+export type TriangleList = {Vector3}
 
 return Triangulator

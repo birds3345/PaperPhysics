@@ -26,7 +26,7 @@ type CollisionPair = {
     body2: number;
 }
 
-local function _fuzzyEqVec2(v1: Vector2, v2: Vector2, epsilon: number?): boolean
+local function _fuzzyEqVec2(v1: Vector3, v2: Vector3, epsilon: number?): boolean
     if not epsilon then
         epsilon = 2.22045e-16
     end
@@ -41,7 +41,7 @@ Solver.__index = Solver
 local function recalculateBoundingBox(body: Body.Body): PubTypes.Box
     if BodyIs(body, Circle) then
         local circle: Circle.Circle = body
-        return Box.new(circle.position + Vector2.new(-circle.radius, circle.radius), circle.position + Vector2.new(circle.radius, -circle.radius))
+        return Box.new(circle.position + Vector3.new(-circle.radius, circle.radius), circle.position + Vector3.new(circle.radius, -circle.radius))
     end
 
     if BodyIs(body, Rectangle) then
@@ -55,7 +55,7 @@ local function recalculateBoundingBox(body: Body.Body): PubTypes.Box
         local brx = math.max(rectangle.position.X, b1.X, b2.X, b3.X, b4.X)
         local bry = math.min(rectangle.position.Y, b1.Y, b2.Y, b3.Y, b4.Y)
         
-        return Box.new(Vector2.new(tlx, tly), Vector2.new(brx, bry))
+        return Box.new(Vector3.new(tlx, tly), Vector3.new(brx, bry))
     end
 
     error("body parameter is not an body")
@@ -64,7 +64,7 @@ end
 function Solver:_updateBodies(delta: number): ()
     for _, body: Body.Body in self._bodies do
         if body.static then
-            body.velocity = Vector2.zero
+            body.velocity = Vector3.zero
 
             body.mass = 0
             body._inverseMass = 0
@@ -86,14 +86,14 @@ function Solver:_updateBodies(delta: number): ()
         elseif BodyIs(body, RigidBody) then
             local rigidBody: RigidBody.RigidBody = body
             
-            local acceleration: Vector2 = (rigidBody._force * rigidBody._inverseMass + rigidBody.gravity) :: any --luau thinks this is a number for some reason
+            local acceleration: Vector3 = (rigidBody._force * rigidBody._inverseMass + rigidBody.gravity) :: any --luau thinks this is a number for some reason
             
             rigidBody.velocity += acceleration * delta
             if math.abs(rigidBody.velocity.X) <= 0.001 then
-                rigidBody.velocity = Vector2.new(0, rigidBody.velocity.Y)
+                rigidBody.velocity = Vector3.new(0, rigidBody.velocity.Y)
             end
             if math.abs(rigidBody.velocity.Y) <= 0.001 then
-                rigidBody.velocity = Vector2.new(rigidBody.velocity.X, 0)
+                rigidBody.velocity = Vector3.new(rigidBody.velocity.X, 0)
             end
 
             rigidBody.position += rigidBody.velocity * delta
@@ -102,7 +102,7 @@ function Solver:_updateBodies(delta: number): ()
             
             rigidBody._boundingBox = recalculateBoundingBox(rigidBody)
             
-            rigidBody._force = Vector2.zero
+            rigidBody._force = Vector3.zero
         end
     end
 end
@@ -215,6 +215,6 @@ function Solver.new(bodies: {Body.Body}, bodyIdMap: {[number]: Body.Body}, quadT
     }, Solver)
 end
 
-export type Solver = typeof(Solver.new({}, QuadTree.new(0, Box.point(Vector2.zero))))
+export type Solver = typeof(Solver.new({}, QuadTree.new(0, Box.point(Vector3.zero))))
 
 return Solver

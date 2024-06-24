@@ -72,7 +72,7 @@ function World.new(worldSettings: WorldSettings.WorldSettings?)
 
     local bodies: {Body.Body} = table.create(16)
     local bodyIdMap: {[number]: Body.Body} = table.create(16)
-    local quadTree: QuadTree.QuadTree<number> = QuadTree.new(wSettings.maxQuadTreePoints, Box.new(Vector2.new(-1e6, 1e6), Vector2.new(1e6, -1e6)))
+    local quadTree: QuadTree.QuadTree<number> = QuadTree.new(wSettings.maxQuadTreePoints, Box.new(Vector3.new(-1e6, 1e6), Vector3.new(1e6, -1e6)))
 
     return setmetatable({
         _bodies = bodies;

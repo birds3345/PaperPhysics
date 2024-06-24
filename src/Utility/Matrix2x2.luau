@@ -13,8 +13,8 @@ function Matrix2x2.multiplyMM(mat1: PubTypes.Matrix2x2, mat2: PubTypes.Matrix2x2
     }
 end
 
-function Matrix2x2.multiplyMV(mat: PubTypes.Matrix2x2, vector: Vector2): Vector2
-    return Vector2.new(mat.m00 * vector.X + mat.m01 * vector.Y, mat.m10 * vector.X + mat.m11 * vector.Y)
+function Matrix2x2.multiplyMV(mat: PubTypes.Matrix2x2, vector: Vector3): Vector3
+    return Vector3.new(mat.m00 * vector.X + mat.m01 * vector.Y, mat.m10 * vector.X + mat.m11 * vector.Y)
 end
 
 function Matrix2x2.fromAngle(radians: number): PubTypes.Matrix2x2

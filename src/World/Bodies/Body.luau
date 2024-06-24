@@ -3,6 +3,8 @@
 --which means the performance impact is negligible at best
 --so this is (hopefully) okay performance wise
 
+--!native
+
 local BodyRTTI = require(script.Parent.BodyRTTI)
 
 local Body = {}
@@ -21,7 +23,7 @@ function Body:is(class: {_classIndex: number}): boolean
     return bit32.band(class._classIndex, self._classIndex) == class._classIndex
 end
 
-function Body:impulse(force: Vector2): ()
+function Body:impulse(force: Vector3): ()
     self._force = force
 end
 
@@ -35,15 +37,18 @@ function Body.new()
     return setmetatable({
         _bodyId = -1;
 
-        position = Vector2.zero;
-        velocity = Vector2.zero;
+        --we use a vector3 for position and velocity because
+        --vector3's use SIMD instructions when compiled natively
+        --while vector2's do not
+        position = Vector3.zero;
+        velocity = Vector3.zero;
 
-        _force = Vector2.zero;
+        _force = Vector3.zero;
         
         mass = 1;
         _inverseMass = 1;
 
-        gravity = Vector2.new(0, -9.80665);
+        gravity = Vector3.new(0, -9.80665);
         static = false;
     }, Body)
 end

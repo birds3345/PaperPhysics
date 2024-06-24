@@ -11,7 +11,7 @@ local ShapeUtility = require(script.Parent.Parent.ShapeUtility)
 
 local CollisionManifold = require(script.Parent.CollisionManifold)
 
-local function closestPointOnLineSegment(point: Vector2, segmentPosition: Vector2, direction: Vector2, length: number): Vector2?
+local function closestPointOnLineSegment(point: Vector3, segmentPosition: Vector3, direction: Vector3, length: number): Vector3?
     local offset = point - segmentPosition
 
     local d = offset:Dot(direction)
@@ -20,7 +20,7 @@ local function closestPointOnLineSegment(point: Vector2, segmentPosition: Vector
     return segmentPosition + direction * d
 end
 
-local function projectPolygon(polygon: {Vector2}, axis: Vector2): (number, number)
+local function projectPolygon(polygon: {Vector3}, axis: Vector3): (number, number)
 	local shapeMin = math.huge
     local shapeMax = -math.huge
 
@@ -34,14 +34,14 @@ local function projectPolygon(polygon: {Vector2}, axis: Vector2): (number, numbe
 	return shapeMin, shapeMax
 end
 
-local function projectCircle(position: Vector2, radius: number, axis: Vector2): (number, number)
+local function projectCircle(position: Vector3, radius: number, axis: Vector3): (number, number)
     local p = position:Dot(axis)
 
     return p - radius, p + radius
 end
 
-local function polygonCircle(b1: Body.Body, b2: Body.Body, polygonPosition: Vector2, polygon: {Vector2}, circlePosition: Vector2, radius: number): CollisionManifold.CollisionManifold?
-    local normal: Vector2 = Vector2.zero
+local function polygonCircle(b1: Body.Body, b2: Body.Body, polygonPosition: Vector3, polygon: {Vector3}, circlePosition: Vector3, radius: number): CollisionManifold.CollisionManifold?
+    local normal: Vector3 = Vector3.zero
 	local depth = math.huge
 
     for i = 1, #polygon do
@@ -49,7 +49,7 @@ local function polygonCircle(b1: Body.Body, b2: Body.Body, polygonPosition: Vect
         local v2 = polygon[i % #polygon + 1]
 
         local edge = (v2 - v1).Unit
-        local n = Vector2.new(edge.Y, -edge.X)
+        local n = Vector3.new(edge.Y, -edge.X)
         
         local polyMin, polyMax = projectPolygon(polygon, n)
 		local circleMin, circleMax = projectCircle(circlePosition, radius, n)
@@ -73,17 +73,17 @@ local function polygonCircle(b1: Body.Body, b2: Body.Body, polygonPosition: Vect
     return CollisionManifold.new(b1, b2, normal, depth, {circlePosition - normal * radius})
 end
 
-local function polygonPolygon(b1: Body.Body, b2: Body.Body, p1Pos: Vector2, p1: {Vector2}, p2Pos: Vector2, p2: {Vector2}): CollisionManifold.CollisionManifold?
-    local normal: Vector2 = Vector2.zero
+local function polygonPolygon(b1: Body.Body, b2: Body.Body, p1Pos: Vector3, p1: {Vector3}, p2Pos: Vector3, p2: {Vector3}): CollisionManifold.CollisionManifold?
+    local normal: Vector3 = Vector3.zero
 	local depth = math.huge
-    local contacts: {Vector2} = {}
+    local contacts: {Vector3} = {}
 
     for i = 1, #p1 do
         local v1 = p1[i]
         local v2 = p1[i % #p1 + 1]
 
         local edge = (v2 - v1).Unit
-        local n = Vector2.new(edge.Y, -edge.X)
+        local n = Vector3.new(edge.Y, -edge.X)
         
         local p1Min, p1Max = projectPolygon(p1, n)
 		local p2Min, p2Max = projectPolygon(p2, n)
@@ -104,7 +104,7 @@ local function polygonPolygon(b1: Body.Body, b2: Body.Body, p1Pos: Vector2, p1: 
         local v2 = p2[i % #p2 + 1]
 
         local edge = (v2 - v1).Unit
-        local n = Vector2.new(edge.Y, -edge.X)
+        local n = Vector3.new(edge.Y, -edge.X)
         
         local p1Min, p1Max = projectPolygon(p1, n)
 		local p2Min, p2Max = projectPolygon(p2, n)
@@ -131,7 +131,7 @@ local function polygonPolygon(b1: Body.Body, b2: Body.Body, p1Pos: Vector2, p1: 
         local v2 = p2[i % #p2 + 1]
 
         local edge = (v2 - v1).Unit
-        local n = Vector2.new(edge.Y, -edge.X)
+        local n = Vector3.new(edge.Y, -edge.X)
 
         local proj1 = n:Dot(v1)
         local proj2 = n:Dot(v2)
@@ -155,7 +155,7 @@ local function polygonPolygon(b1: Body.Body, b2: Body.Body, p1Pos: Vector2, p1: 
         local v2 = p1[i % #p1 + 1]
 
         local edge = (v2 - v1).Unit
-        local n = Vector2.new(edge.Y, -edge.X)
+        local n = Vector3.new(edge.Y, -edge.X)
 
         local proj1 = n:Dot(v1)
         local proj2 = n:Dot(v2)
@@ -213,7 +213,7 @@ function CollisionDetection.circleCircle(circle1: Circle.Circle, circle2: Circle
     local relative = circle2.position - circle1.position
     if relative.Magnitude > circle1.radius + circle2.radius then return end
     
-    local normal = if relative == Vector2.zero then Vector2.yAxis else relative.Unit
+    local normal = if relative == Vector3.zero then Vector3.yAxis else relative.Unit
     local depth = circle1.radius + circle2.radius - relative.Magnitude
     local contactPoint = circle1.position + normal * circle1.radius
     

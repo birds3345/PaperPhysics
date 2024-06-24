@@ -27,8 +27,8 @@ function CollisionResolver.resolve(manifold: CollisionManifold.CollisionManifold
     local rigidBody1 = manifold.body1 :: RigidBody.RigidBody
     local rigidBody2 = manifold.body2 :: RigidBody.RigidBody
     
-    local body1Force = Vector2.zero
-    local body2Force = Vector2.zero
+    local body1Force = Vector3.zero
+    local body2Force = Vector3.zero
     
     local body1AngularForce = 0
     local body2AngularForce = 0
@@ -42,8 +42,8 @@ function CollisionResolver.resolve(manifold: CollisionManifold.CollisionManifold
         local rel2 = contactPoint - (rigidBody2.position + rigidBody2._centroid)
         
         --convert the angular velocity into a vector that describes the angular velocity
-        local angularVel1 = Vector2.new(-rel1.Y, rel1.X) * rigidBody1.angularVelocity
-        local angularVel2 = Vector2.new(-rel2.Y, rel2.X) * rigidBody2.angularVelocity
+        local angularVel1 = Vector3.new(-rel1.Y, rel1.X) * rigidBody1.angularVelocity
+        local angularVel2 = Vector3.new(-rel2.Y, rel2.X) * rigidBody2.angularVelocity
 
         --add the contributions of the angular velocity to the linear velocity
         local relVel1 = rigidBody1.velocity + angularVel1
@@ -56,8 +56,8 @@ function CollisionResolver.resolve(manifold: CollisionManifold.CollisionManifold
         if d > 0 then continue end
 
         --calculate the relative velocity's influence on the angular velocity
-        local c1 = rel1:Cross(manifold.normal)
-        local c2 = rel2:Cross(manifold.normal)
+        local c1 = rel1:Cross(manifold.normal).Z
+        local c2 = rel2:Cross(manifold.normal).Z
 
         --formula to calculate the amount of force to apply for each impulse
         local crossInertiaSum = c1 * c1 * rigidBody1._inverseInertia + c2 * c2 * rigidBody2._inverseInertia
@@ -79,8 +79,8 @@ function CollisionResolver.resolve(manifold: CollisionManifold.CollisionManifold
         --this currently faces towards the relative vector so we negate it
         tangent = -tangent.Unit
 
-        local ct1 = rel1:Cross(tangent)
-        local ct2 = rel2:Cross(tangent)
+        local ct1 = rel1:Cross(tangent).Z
+        local ct2 = rel2:Cross(tangent).Z
 
         local crossTangentSum = ct1 * ct1 * rigidBody1._inverseInertia + ct2 * ct2 * rigidBody2._inverseInertia
         

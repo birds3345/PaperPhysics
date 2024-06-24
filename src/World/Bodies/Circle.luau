@@ -8,13 +8,13 @@ Circle._classIndex = BodyRTTI(Circle, RigidBody)
 
 function Circle:setRadius(radius: number): ()
     self.radius = radius
-    self.size = Vector2.new(radius * 2, radius * 2)
+    self.size = Vector3.new(radius * 2, radius * 2)
 
     self._inertia = 0.5 * self.mass * self.radius * self.radius
     self._inverseInertia = 1 / self._inertia
 
     self._area = math.pi * radius * radius
-    self._centroid = Vector2.zero
+    self._centroid = Vector3.zero
 end
 
 function Circle.new(): Circle

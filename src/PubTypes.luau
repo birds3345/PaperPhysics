@@ -1,13 +1,13 @@
-export type ConvexPolygon = {Vector2};
-export type ConcavePolygon = {Vector2};
+export type ConvexPolygon = {Vector3};
+export type ConcavePolygon = {Vector3};
 export type Polygon = ConvexPolygon | ConcavePolygon;
 
 export type Box = {
-    topLeft: Vector2;
-    bottomRight: Vector2;
+    topLeft: Vector3;
+    bottomRight: Vector3;
 }
 
-export type Point = Vector2;
+export type Point = Vector3;
 
 export type Matrix2x2 = {
     m00: number;
