@@ -36,7 +36,7 @@ function Body.new()
         _bodyId = -1;
 
         --we use a vector3 for position and velocity because
-        --vector3's use SIMD instructions when compiled natively
+        --vector3's are their own type (more optimized) and utilize SIMD instructions
         --while vector2's do not
         position = Vector3.zero;
         velocity = Vector3.zero;
