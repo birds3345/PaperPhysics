@@ -7,7 +7,7 @@ function Box.intersects(box1: PubTypes.Box, box2: PubTypes.Box): boolean
 end
 
 --[[
-@returns true if box1 is completely encapsulated by box2 (inclusive)
+    @returns true if box1 is completely encapsulated by box2 (inclusive)
 ]]
 function Box.contains(box1: PubTypes.Box, box2: PubTypes.Box): boolean
     return box1.topLeft.X >= box2.topLeft.X and box1.topLeft.Y <= box2.topLeft.Y and box1.bottomRight.X <= box2.bottomRight.X and box1.bottomRight.Y >= box2.bottomRight.Y

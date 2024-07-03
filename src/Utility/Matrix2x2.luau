@@ -27,7 +27,7 @@ function Matrix2x2.fromAngle(radians: number): PubTypes.Matrix2x2
 end
 
 --[[
-@returns in radians
+    @returns in radians
 ]]
 function Matrix2x2.toAngle(mat: PubTypes.Matrix2x2): number
     return math.atan2(mat.m10, mat.m00)
