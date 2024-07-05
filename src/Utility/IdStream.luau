@@ -14,6 +14,6 @@ function IdStream.new(upperLimit: number)
     }, IdStream)
 end
 
-export type IdStream = typeof(IdStream.new(0))
+export type IdStream = typeof(IdStream.new(...))
 
 return IdStream

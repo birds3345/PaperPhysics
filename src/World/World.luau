@@ -88,6 +88,6 @@ function World.new(worldSettings: WorldSettings.WorldSettings?)
     }, World)
 end
 
-export type World = typeof(World.new(WorldSettings.new()));
+export type World = typeof(World.new(...));
 
 return World

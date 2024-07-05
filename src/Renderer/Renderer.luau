@@ -87,14 +87,6 @@ function Renderer.new(canvas: Frame, world: World.World, camera: Camera.Camera)
     return self
 end
 
-export type Renderer = typeof(setmetatable({} :: {
-    camera: Camera.Camera;
-
-    _world: World.World;
-    _maid: Maid.Maid;
-    _canvas: Frame;
-
-    _sizePerPixel: number;
-}, Renderer))
+export type Renderer = typeof(Renderer.new(...))
 
 return Renderer

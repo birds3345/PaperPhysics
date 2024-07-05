@@ -215,6 +215,6 @@ function Solver.new(bodies: {Body.Body}, bodyIdMap: {[number]: Body.Body}, quadT
     }, Solver)
 end
 
-export type Solver = typeof(Solver.new({}, QuadTree.new(0, Box.point(Vector3.zero))))
+export type Solver = typeof(Solver.new(...))
 
 return Solver
