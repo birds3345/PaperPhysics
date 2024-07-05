@@ -36,6 +36,6 @@ function Maid.new()
     }, Maid)
 end
 
-export type Maid = typeof(Maid.new(...))
+export type Maid = typeof(Maid.new())
 
 return Maid
